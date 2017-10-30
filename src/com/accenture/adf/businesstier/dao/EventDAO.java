@@ -435,7 +435,7 @@ public class EventDAO {
 		//UPDATE EVENT E1 SET E1.NAME=?, E1.DESCRIPTION=?, E1.PLACES=?, E1.DURATION=?, E1.EVENTTYPE=? WHERE E1.EVENTID=?;
 		int status1=0;
 		int status2=0,status=0;
-		statement=connection.prepareStatement(query.getUpdateEvent());
+		statement=connection.prepareStatement(query.getUpdateTEvent());
 		
 		statement.setString(1, updateEvent.getName());
 		statement.setString(2, updateEvent.getDescription());
@@ -479,37 +479,54 @@ public class EventDAO {
 	public int insertEvent(Event insertEvent) throws ClassNotFoundException,
 			SQLException {
 		
-		// TODO: Add code here.....
-		// TODO: Pseudo-code are in the block comments above this method.
-		// TODO: For more comprehensive pseudo-code with details,
-		// refer to the Component/Class Detail Design Document
-		connection=FERSDataConnection.createConnection();
-		String qry="select * from event where eventid=?";
-		statement=connection.prepareStatement("qry");
-		resultSet =statement.executeQuery();
-		resultSet.next();
-		boolean evfound=false;
-		int flag=0;
-		if(insertEvent.getName().equalsIgnoreCase(resultSet.getString(2)));
-		{
-			evfound=true;
+		connection = FERSDataConnection.createConnection(); 		 
+		int status = 0;		 
+		int eventId = 0;		 
+		statement = connection.prepareStatement(query.getSelectMaxEventId());		 
+		resultSet = statement.executeQuery();		 
+		while (resultSet.next()) {		 
+		eventId = resultSet.getInt("eventid");
+
+		}		 
+		//System.out.println(eventId);
+
+		//++eventId;
+		 
+		statement = connection.prepareStatement(query.getInsertEvent());		 
+		statement.setInt(1, ++eventId);		 
+		statement.setString(2, insertEvent.getName());		 
+		statement.setString(3, insertEvent.getDescription());		 
+		statement.setString(4, insertEvent.getPlace());		 
+		statement.setString(5, insertEvent.getDuration());		 
+		statement.setString(6, insertEvent.getEventtype());		 
+		log.info("Inserting event ind database for given eventName:"		 
+		+ insertEvent.getName());		 
+		status = statement.executeUpdate();
+		FERSDataConnection.closeConnection();
+
+		 
+		connection = FERSDataConnection.createConnection();		 
+		int retval=insertEvent.getEventSession();		 
+		int i=1;	 
+		for(i=1;i<=retval;i++){		 
+		int eventSessionId = 0;		 
+		statement = connection.prepareStatement(query.getSelectMaxEventSessionId());		 
+		resultSet = statement.executeQuery();		 
+		while (resultSet.next()) {		 
+		eventSessionId = resultSet.getInt("eventsessionid");
+
+		}		 
+		statement = connection.prepareStatement(query.getInsertEventSession());		 
+		statement.setInt(1, ++eventSessionId);		 
+		statement.setInt(2, insertEvent.getEventCoordinatorId());		 
+		statement.setInt(3, eventId);		 
+		statement.setInt(4, Integer.parseInt(insertEvent.getSeatsavailable()));		 
+		log.info("Inserting eventsession in database");		 
+		status = statement.executeUpdate();
 		}
-		//INSERT INTO EVENT(EVENTID, NAME, DESCRIPTION, PLACES, DURATION, EVENTTYPE) VALUES(?,?,?,?,?,?)
-		if(!evfound)
-		{
-			statement=connection.prepareStatement(query.getInsertEvent());
-			statement.setInt(1, insertEvent.getEventid());
-			statement.setString(2,insertEvent.getName());
-			statement.setString(3, insertEvent.getDescription());
-			statement.setString(4, insertEvent.getPlace());
-			statement.setString(5, insertEvent.getDuration());
-			statement.setString(6,insertEvent.getEventtype());
-			
-		int retval=statement.executeUpdate();
-		if(retval>0)
-			flag=1;
-		}
-		return flag;
+		FERSDataConnection.closeConnection();		 
+		return status;
+		
 	}	
 	
 
@@ -548,14 +565,14 @@ public class EventDAO {
 		statement.executeUpdate();		 
 		//System.out.println(status1);	 
 		 
-		statement=connection.prepareStatement("DELETE FROM EVENTSESSION WHERE EVENTSESSIONID=? OR EVENTID=?");		 
+		statement=connection.prepareStatement("DELETE FROM EVENTSESSION WHERE EVENTSESSIONID=? AND EVENTID=?");		 
 		statement.setInt(1,sessionId);		 
 		statement.setInt(2,eventId);		 
 		r1=statement.executeUpdate();		 
-		statement=connection.prepareStatement(query.getDeleteEvent());		 
-		statement.setInt(1,eventId);		 
-		r2=statement.executeUpdate();		 
-		if(r1>0 && r2>0)		 
+		//statement=connection.prepareStatement(query.getDeleteEvent());		 
+	//	statement.setInt(1,eventId);		 
+		//r2=statement.executeUpdate();		 
+		if(r1>0)		 
 		status=1;		 
 		else		 
 		status=0;		 

@@ -104,5 +104,10 @@ public class Event {
 		this.eventSession = eventSession;
 	}
 
+	public void setSeatsavailable(int i) {
+		// TODO Auto-generated method stub
+		this.seatsavailable = seatsavailable;
+	}
+
 
 }
