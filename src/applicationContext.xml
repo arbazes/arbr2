@@ -32,7 +32,7 @@
 		<property name="selectMaxEventSessionId" value="SELECT MAX(EVENTSESSIONID) EVENTSESSIONID FROM EVENTSESSION"></property>
 		<property name="deleteEvent" value="DELETE FROM EVENT WHERE EVENTID=?"></property>
 		<property name="deleteEventSession" value="DELETE FROM EVENTSESSION WHERE EVENTSESSIONID=?"></property>
-		<property name="deleteEventSessionSignup" value="DELETE FROM EVENTSESSIONSIGNUP WHERE EVENTSESSIONID = ? AND EVENTID = ?"></property>
+		<property name="deleteEventSessionSignup" value="DELETE FROM EVENTSESSIONSIGNUP WHERE EVENTSESSIONID = ? OR EVENTID = ?"></property>
 		<property name="changePWDQuery" value="UPDATE VISITOR SET PASSWORD=? WHERE VISITORID=?"></property>
 		<property name="verifyPWDQuery" value="SELECT PASSWORD FROM VISITOR WHERE VISITORID=?"></property>
  	</bean>

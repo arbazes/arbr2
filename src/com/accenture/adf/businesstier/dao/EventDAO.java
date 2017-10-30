@@ -275,13 +275,33 @@ public class EventDAO {
 	public ArrayList<Object[]> showAllEventsAsc()
 			throws ClassNotFoundException, SQLException {
 
-		ArrayList<Object[]> eventList = new ArrayList<Object[]>();
-
+		ArrayList<Object[]> eventList = new ArrayList<Object[]>();		 
+		connection = FERSDataConnection.createConnection();		 
+		statement=connection.prepareStatement(query.getSearchEventAsc());
+		 
 		// TODO: Add code here.....
+		 
 		// TODO: Pseudo-code are in the block comments above this method.
+		 
 		// TODO: For more comprehensive pseudo-code with details,
+		 
 		// refer to the Component/Class Detail Design Document
-
+		 
+		resultSet=statement.executeQuery();		 
+		while(resultSet.next())
+		{		 
+		Object []obj=new Object[8];		 
+		obj[0]=resultSet.getInt(1);		 
+		obj[1]=resultSet.getString(2);		 
+		obj[2]=resultSet.getString(3);		 
+		obj[3]=resultSet.getString(4);		 
+		obj[4]=resultSet.getString(5);		 
+		obj[5]=resultSet.getString(6);		 
+		obj[6]=resultSet.getInt(7);		 
+		obj[7]=resultSet.getInt(8);	 
+		eventList.add(obj);
+		}
+		 
 		return eventList;
 
 	}
@@ -312,13 +332,27 @@ public class EventDAO {
 	public ArrayList<Object[]> showAllEventsDesc()
 			throws ClassNotFoundException, SQLException {
 
-		ArrayList<Object[]> eventList = new ArrayList<Object[]>();
-
-		// TODO: Add code here.....
-		// TODO: Pseudo-code are in the block comments above this method.
-		// TODO: For more comprehensive pseudo-code with details,
-		// refer to the Component/Class Detail Design Document
-
+		ArrayList<Object[]> eventList = new ArrayList<Object[]>();		 
+		// TODO: Add code here.....		 
+		// TODO: Pseudo-code are in the block comments above this method.		 
+		// TODO: For more comprehensive pseudo-code with details,		 
+		// refer to the Component/Class Detail Design Document		 
+		connection = FERSDataConnection.createConnection();		 
+		statement=connection.prepareStatement(query.getSearchEventDesc());		 
+		resultSet=statement.executeQuery();		 
+		while(resultSet.next())
+		{		 
+		Object []obj=new Object[8];		 
+		obj[0]=resultSet.getInt(1);		 
+		obj[1]=resultSet.getString(2);		 
+		obj[2]=resultSet.getString(3);		 
+		obj[3]=resultSet.getString(4);		 
+		obj[4]=resultSet.getString(5);		 
+		obj[5]=resultSet.getString(6);		 
+		obj[6]=resultSet.getInt(7);		 
+		obj[7]=resultSet.getInt(8);		 
+		eventList.add(obj);}
+		 
 		return eventList;
 
 	}
@@ -351,6 +385,24 @@ public class EventDAO {
 		// TODO: Pseudo-code are in the block comments above this method.
 		// TODO: For more comprehensive pseudo-code with details,
 		// refer to the Component/Class Detail Design Document
+		connection=FERSDataConnection.createConnection();
+		statement=connection.prepareStatement(query.getGetEvent());
+		statement.setInt(1, eventId);
+		statement.setInt(2, sessionId);
+		resultSet=statement.executeQuery();
+		while(resultSet.next())
+		{
+			event.setEventid(resultSet.getInt(1));
+			event.setName(resultSet.getString(2));
+			event.setDescription(resultSet.getString(3));
+			event.setPlace(resultSet.getString(4));
+			event.setDuration(resultSet.getString(5));
+			event.setEventtype(resultSet.getString(6));
+			event.setSessionId(resultSet.getInt(7));
+			event.setSeatsavailable(resultSet.getString(8));
+			
+		}
+		FERSDataConnection.closeConnection();
 		
 		return event;
 	}
@@ -379,8 +431,32 @@ public class EventDAO {
 		// TODO: Pseudo-code are in the block comments above this method.
 		// TODO: For more comprehensive pseudo-code with details,
 		// refer to the Component/Class Detail Design Document
+		connection=FERSDataConnection.createConnection();
+		//UPDATE EVENT E1 SET E1.NAME=?, E1.DESCRIPTION=?, E1.PLACES=?, E1.DURATION=?, E1.EVENTTYPE=? WHERE E1.EVENTID=?;
+		int status1=0;
+		int status2=0,status=0;
+		statement=connection.prepareStatement(query.getUpdateEvent());
 		
-		return 0;
+		statement.setString(1, updateEvent.getName());
+		statement.setString(2, updateEvent.getDescription());
+		statement.setString(3, updateEvent.getPlace());
+		statement.setString(4,updateEvent.getDuration());
+		statement.setString(5, updateEvent.getEventtype());
+		statement.setInt(6, updateEvent.getEventid());
+		
+		status1=statement.executeUpdate();
+		//UPDATE EVENTSESSION SET SEATSAVAILABLE=? WHERE EVENTSESSIONID = ? AND EVENTID = ?
+		statement=connection.prepareStatement(query.getUpdateEventSession());
+		statement.setString(1, updateEvent.getSeatsavailable());
+		statement.setInt(2, updateEvent.getSessionId());
+		statement.setInt(3, updateEvent.getEventid());
+		status2=statement.executeUpdate();
+		
+		if(status1>0&&status2>0)
+			status=1;
+		
+		FERSDataConnection.closeConnection();
+		return status;
 	}
 
 	/**
@@ -407,8 +483,33 @@ public class EventDAO {
 		// TODO: Pseudo-code are in the block comments above this method.
 		// TODO: For more comprehensive pseudo-code with details,
 		// refer to the Component/Class Detail Design Document
-		
-		return 0;
+		connection=FERSDataConnection.createConnection();
+		String qry="select * from event where eventid=?";
+		statement=connection.prepareStatement("qry");
+		resultSet =statement.executeQuery();
+		resultSet.next();
+		boolean evfound=false;
+		int flag=0;
+		if(insertEvent.getName().equalsIgnoreCase(resultSet.getString(2)));
+		{
+			evfound=true;
+		}
+		//INSERT INTO EVENT(EVENTID, NAME, DESCRIPTION, PLACES, DURATION, EVENTTYPE) VALUES(?,?,?,?,?,?)
+		if(!evfound)
+		{
+			statement=connection.prepareStatement(query.getInsertEvent());
+			statement.setInt(1, insertEvent.getEventid());
+			statement.setString(2,insertEvent.getName());
+			statement.setString(3, insertEvent.getDescription());
+			statement.setString(4, insertEvent.getPlace());
+			statement.setString(5, insertEvent.getDuration());
+			statement.setString(6,insertEvent.getEventtype());
+			
+		int retval=statement.executeUpdate();
+		if(retval>0)
+			flag=1;
+		}
+		return flag;
 	}	
 	
 
@@ -434,12 +535,32 @@ public class EventDAO {
 	public int deleteEvent(int eventId, int sessionId)
 			throws ClassNotFoundException, SQLException, FERSGenericException {
 
-		// TODO: Add code here.....
-		// TODO: Pseudo-code are in the block comments above this method.
-		// TODO: For more comprehensive pseudo-code with details,
+		int r1=0,r2=0,status=0,status1=0;		 
+		// TODO: Add code here.....		 
+		// TODO: Pseudo-code are in the block comments above this method.		 
+		// TODO: For more comprehensive pseudo-code with details,		 
 		// refer to the Component/Class Detail Design Document
-		
-		return 0;	
+		 
+		connection = FERSDataConnection.createConnection();		 
+		statement=connection.prepareStatement(query.getDeleteEventSessionSignup());		 
+		statement.setInt(1,sessionId);		 
+		statement.setInt(2,eventId);		 
+		statement.executeUpdate();		 
+		//System.out.println(status1);	 
+		 
+		statement=connection.prepareStatement("DELETE FROM EVENTSESSION WHERE EVENTSESSIONID=? OR EVENTID=?");		 
+		statement.setInt(1,sessionId);		 
+		statement.setInt(2,eventId);		 
+		r1=statement.executeUpdate();		 
+		statement=connection.prepareStatement(query.getDeleteEvent());		 
+		statement.setInt(1,eventId);		 
+		r2=statement.executeUpdate();		 
+		if(r1>0 && r2>0)		 
+		status=1;		 
+		else		 
+		status=0;		 
+		return status;
+
 	}
 
 	/**
@@ -462,13 +583,25 @@ public class EventDAO {
 	public List<EventCoordinator> getEventCoordinator()
 			throws ClassNotFoundException, SQLException {
 		
-		List<EventCoordinator> eventCoordinatorList = new ArrayList<EventCoordinator>();
-		
-		// TODO: Add code here.....
-		// TODO: Pseudo-code are in the block comments above this method.
-		// TODO: For more comprehensive pseudo-code with details,
-		// refer to the Component/Class Detail Design Document		
-		
+		List<EventCoordinator> eventCoordinatorList = new ArrayList<EventCoordinator>();		 
+		// TODO: Add code here.....		 
+		// TODO: Pseudo-code are in the block comments above this method.		 
+		// TODO: For more comprehensive pseudo-code with details,		 
+		// refer to the Component/Class Detail Design Document 		 
+		connection = FERSDataConnection.createConnection();		 
+		statement=connection.prepareStatement(query.getSelectEventCoordinator());
+		resultSet=statement.executeQuery();		 
+		while(resultSet.next())
+		{		 
+		EventCoordinator e=new EventCoordinator();		 
+		e.setEventcoordinatorid(resultSet.getInt(1));		 
+		e.setUserName(resultSet.getString(2));		 
+		eventCoordinatorList.add(e);
+		}
+		 
 		return eventCoordinatorList;
+
+		}
+
 	}
-}
+
