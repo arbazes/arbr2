@@ -207,7 +207,13 @@ public class EventController {
 			mv.addObject("REGISTRATIONSTATUSMESSAGE",statusString);
 			log.info(statusString);
 
-		} else if (status == 0) {
+		}if(status==13)
+		{
+			mv.addObject("REGISTRATIONSTATUSMESSAGE",
+					"cannot add:An event with the same name already exists");
+			log.info("cannot add:An event with the same name already exists");
+		}
+		else if (status == 0) {
 			mv.addObject("REGISTRATIONSTATUSMESSAGE",
 					"There was error while saving the event. Please see log file for more details..");
 			log.info("There was error while saving the event. Please see log file for more details..");

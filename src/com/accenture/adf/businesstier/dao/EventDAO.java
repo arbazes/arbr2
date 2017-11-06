@@ -228,8 +228,11 @@ public class EventDAO {
 		// TODO: For more comprehensive pseudo-code with details,
 		// refer to the Component/Class Detail Design Document
 		connection=FERSDataConnection.createConnection();
+		
 		statement=connection.prepareStatement(query.getSearchByEventName());
-		statement.setString(1, eventname);
+		String ename;
+		ename="%"+eventname+"%";
+		statement.setString(1, ename);
 		resultSet=statement.executeQuery();
 		while(resultSet.next())
 		{
@@ -435,6 +438,21 @@ public class EventDAO {
 		//UPDATE EVENT E1 SET E1.NAME=?, E1.DESCRIPTION=?, E1.PLACES=?, E1.DURATION=?, E1.EVENTTYPE=? WHERE E1.EVENTID=?;
 		int status1=0;
 		int status2=0,status=0;
+		boolean evfound=false;
+		statement=connection.prepareStatement("select * from event");
+		resultSet= statement.executeQuery();
+		while(resultSet.next())
+		{if(updateEvent.getName().equalsIgnoreCase(resultSet.getString(2)))
+		{
+			evfound=true;
+			status=13;
+			System.out.println(status);
+			//System.out.println("new name:"+resultSet.getString(2));
+			//System.out.println();
+			break;
+		}}
+		if(!evfound)
+		{
 		statement=connection.prepareStatement(query.getUpdateTEvent());
 		
 		statement.setString(1, updateEvent.getName());
@@ -454,6 +472,7 @@ public class EventDAO {
 		
 		if(status1>0&&status2>0)
 			status=1;
+		}
 		
 		FERSDataConnection.closeConnection();
 		return status;
@@ -481,12 +500,27 @@ public class EventDAO {
 		
 		connection = FERSDataConnection.createConnection(); 		 
 		int status = 0;		 
-		int eventId = 0;		 
+		int eventId = 0;
+		boolean evfound=false;
+		statement=connection.prepareStatement("select * from event");
+		resultSet= statement.executeQuery();
+		while(resultSet.next())
+		{if(insertEvent.getName().equalsIgnoreCase(resultSet.getString(2)))
+		{
+			evfound=true;
+			status=13;
+			System.out.println(status);
+			//System.out.println("new name:"+resultSet.getString(2));
+			//System.out.println();
+			break;
+		}}
+		if(!evfound)
+		{
 		statement = connection.prepareStatement(query.getSelectMaxEventId());		 
 		resultSet = statement.executeQuery();		 
 		while (resultSet.next()) {		 
 		eventId = resultSet.getInt("eventid");
-
+		
 		}		 
 		//System.out.println(eventId);
 
@@ -523,6 +557,7 @@ public class EventDAO {
 		statement.setInt(4, Integer.parseInt(insertEvent.getSeatsavailable()));		 
 		log.info("Inserting eventsession in database");		 
 		status = statement.executeUpdate();
+		}
 		}
 		FERSDataConnection.closeConnection();		 
 		return status;
