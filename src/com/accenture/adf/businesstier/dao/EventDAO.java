@@ -441,7 +441,7 @@ public class EventDAO {
 		boolean evfound=false;
 		statement=connection.prepareStatement("select * from event");
 		resultSet= statement.executeQuery();
-		while(resultSet.next())
+		/*while(resultSet.next())
 		{if(updateEvent.getName().equalsIgnoreCase(resultSet.getString(2)))
 		{
 			evfound=true;
@@ -452,7 +452,7 @@ public class EventDAO {
 			break;
 		}}
 		if(!evfound)
-		{
+		{*/
 		statement=connection.prepareStatement(query.getUpdateTEvent());
 		
 		statement.setString(1, updateEvent.getName());
@@ -472,7 +472,7 @@ public class EventDAO {
 		
 		if(status1>0&&status2>0)
 			status=1;
-		}
+		//s}
 		
 		FERSDataConnection.closeConnection();
 		return status;

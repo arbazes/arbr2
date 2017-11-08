@@ -400,7 +400,7 @@ public class VisitorController {
 		List<Object[]> eventList = new ArrayList<Object[]>();
 		EventFacade serviceImpl = new EventServiceImpl();
 
-		serviceImpl.updateEventDeletions(eventid, eventsessionid);
+		//serviceImpl.updateEventDeletions(eventid, eventsessionid);
 
 		log.info("Seats allocated for the event are released :" + eventid);
 

@@ -386,6 +386,14 @@ public class VisitorDAO {
 		statement.setInt(2, visitor.getVisitorId());
 		statement.setInt(3, eventid);
 		int status=statement.executeUpdate();
+		if (status > 0) {
+			 
+			EventDAO edao = new EventDAO();
+			 
+			edao.updateEventDeletions(eventid,eventsessionid);
+
+			}
+
 		System.out.println(status);
 		if (status <= 0)
 			throw new FERSGenericException("Records not updated properly",
