@@ -136,8 +136,8 @@ import com.accenture.adf.businesstier.controller.VisitorController;
     * Call searchVisitor method and assert model view name 
     */ 
    request = new MockHttpServletRequest("GET", "/searchVisitor.htm");
-   request.setParameter("USERNAME", "amith");
-   request.setParameter("PASSWORD", "rajmp");
+   request.setParameter("USERNAME", "aishna");
+   request.setParameter("PASSWORD", "pass");
    try {
     modelAndView = controller.searchVisitor(request, response);
    } catch (Exception e) {

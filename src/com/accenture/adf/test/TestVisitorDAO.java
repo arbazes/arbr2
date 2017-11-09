@@ -48,36 +48,89 @@ public class TestVisitorDAO {
 	 * Deallocating objects after execution of every method
 	 * @throws Exception
 	 */
-	@After
+
+	@After 
 	public void tearDown() throws Exception {
-		/**
-		 * @TODO: Release all the objects here by assigning them null  
-		 */
-	}
+		/** 
+		 * @TODO: Release all the objects here by assigning them null */
+ 
+		visitor=null; 
+		visitorDAO=null; 
+		registeredEvents=null;
 
-	/**
-	 * Test case for method insertData
-	 */
-	@Test
-	public void testInsertData() {
-		/**
-		 * @TODO: Create visitor object by setting appropriate values
-		 * Call insertData method by passing this visitor object
-		 * Search this new visitor object by calling searchUser method
-		 * Assert the values of username
-		 */		
-	}	
+} 
+/**
+* Test case for method insertData
+*/
+ 
+		@Test 
+		public void testInsertData() {
+ 
+/**
+ 
+* @TODO: Create visitor object by setting appropriate values
 
-	/**
-	 * Test case for method searchUser
-	 */
-	@Test
-	public void testSearchUser() {
-		/**
-		 * @TODO: Call searchUser method for valid values of username
-		 * and password and assert the value of username for the returned type of method
-		 */		
-	}
+* Call insertData method by passing this visitor object
+
+* Search this new visitor object by calling searchUser method
+
+* Assert the values of username
+ 
+*/ 
+ 
+visitor.setUserName("tastasl");	 
+visitor.setFirstName("asxsaxx"); 
+visitor.setLastName("sasss"); 
+visitor.setPassword("ppsap");
+ 
+		boolean flag=false; 
+		try { 
+			flag= visitorDAO.insertData(visitor); 
+		} catch (ClassNotFoundException e) {
+ 
+// TODO Auto-generated catch block
+ 
+			e.printStackTrace(); 
+		} catch (SQLException e) {
+// TODO Auto-generated catch block 
+				fail("RUNTIME"); 
+		} catch (Exception e) {
+// TODO Auto-generated catch block
+			e.printStackTrace();
+} 
+		assertEquals(true,flag);
+
+} 
+
+ 
+/**
+
+* Test case for method searchUser
+
+*/
+ 
+		@Test 
+		public void testSearchUser() { 
+/** 
+* @TODO: Call searchUser method for valid values of username 
+* and password and assert the value of username for the returned type of method 
+*/  
+			String user="bsmith"; 
+			String pass="password"; 
+			try { 
+				Visitor v=visitorDAO.searchUser(user, pass); 
+				assertEquals(user,v.getUserName()); 
+			} catch (ClassNotFoundException e) { 
+// TODO Auto-generated catch block 
+				System.out.println("CL\t"+e.getMessage());
+ 
+			} catch (SQLException e) { 
+// TODO Auto-generated catch block 
+				System.out.println("S\t"+e.getMessage());
+
+			}
+
+}
 
 	/**
 	 * Test case for method registerVisitorToEvent

@@ -29,16 +29,15 @@ import com.accenture.adf.businesstier.entity.Event;
   * 
   */
  public class TestEventServiceImpl {
-
- private static Connection connection = null;
+  private static Connection connection = null;
   private static PreparedStatement statement = null;
   private static ResultSet resultSet = null;
-  private List<Object[]> eventList;
+
+ private List<Object[]> eventList;
   private Visitor visitor;
   private EventServiceImpl eventServiceImpl;
 
-
-  /**
+ /**
    * Set up the objects required before execution of every method
    * 
    * @throws Exception
@@ -59,6 +58,8 @@ import com.accenture.adf.businesstier.entity.Event;
    /**
     * @TODO: Release all the objects here by assigning them null  
     */
+   eventServiceImpl=null;
+   visitor=null;
   }
 
  /**
@@ -68,11 +69,11 @@ import com.accenture.adf.businesstier.entity.Event;
   public void testGetAllEvents() {
    /**
     * @TODO: Call getAllEvents method and assert it for the size of returned array
-    */ 
+    */
    eventList=eventServiceImpl.getAllEvents();
-   assertEquals(12,eventList.size());
-
-
+   assertEquals(3,eventList.size());
+   
+   
   }
 
  /**
@@ -84,16 +85,10 @@ import com.accenture.adf.businesstier.entity.Event;
     * @TODO: Call checkEventsofVisitor and assert the returned type of this method
     * for appropriate return type
     */ 
-   
    Boolean flag=false;
-
-  visitor.setVisitorId(1003);
-
-  flag=eventServiceImpl.checkEventsofVisitor(visitor,1002,10002);
-
-  assertEquals(true,flag);
-
-
+   visitor.setVisitorId(1001);
+   flag=eventServiceImpl.checkEventsofVisitor(visitor,1001,10001);
+   assertEquals(true,flag);
   }
 
  /**
@@ -105,113 +100,28 @@ import com.accenture.adf.businesstier.entity.Event;
     * @TODO: Call updateEventDeletions and assert the return type of this method
     */ 
    try {
-
-   connection = FERSDataConnection.createConnection();
-
-   statement = connection.prepareStatement("SELECT SEATSAVAILABLE FROM EVENTSESSION WHERE EVENTSESSIONID = ? AND EVENTID = ?");
-
-   statement.setInt(1, 10002);
-
-   statement.setInt(2, 1002);
-
-   resultSet = statement.executeQuery();
-
-   resultSet.next();
-
-   int val1 = resultSet.getInt(1);
-    
-    eventServiceImpl.updateEventDeletions(1002,10002);
-
-   resultSet = statement.executeQuery();
-
-   resultSet.next();
-
-   int val2 = resultSet.getInt(1);
-   
+    connection = FERSDataConnection.createConnection();
+    statement = connection.prepareStatement("SELECT SEATSAVAILABLE FROM EVENTSESSION WHERE EVENTSESSIONID = ? AND EVENTID = ?;");
+    statement.setInt(1, 10001);
+    statement.setInt(2, 1001);
+    resultSet = statement.executeQuery();
+    resultSet.next();
+    int val1 = resultSet.getInt(1);
+    eventServiceImpl.updateEventDeletions(1001,10001);
+    resultSet = statement.executeQuery();
+    resultSet.next();
+    int val2 = resultSet.getInt(1);
     assertEquals(true,((++val1)==val2));
-
-   
-
- } catch (ClassNotFoundException e) {
-
-  // TODO Auto-generated catch block
-
-  e.printStackTrace();
-
- } catch (SQLException e) {
-
-  // TODO Auto-generated catch block
-
-  e.printStackTrace(); 
-
- } catch (Exception e) {
-
-  // TODO Auto-generated catch block
-
-  e.printStackTrace();
-
+    
+  } catch (ClassNotFoundException e) {
+   // TODO Auto-generated catch block
+   e.printStackTrace();
+  } catch (SQLException e) {
+   // TODO Auto-generated catch block
+   e.printStackTrace(); 
+  } catch (Exception e) {
+   // TODO Auto-generated catch block
+   e.printStackTrace();
+  }
+  }
  }
-
-
-  }
-
- /**
-   * Junit test case for getEventCoordinator
-   */
-  @Test
-  public void testGetEventCoordinator() {
-   /**
-    * @TODO: Call getAllEventCoordinators and assert the size of return type of this method
-    */  
-  }
-
- /**
-   * Junit test case for getEvent
-   */
-  @Test
-  public void testGetEvent() {
-   /**
-    * @TODO: Call getEvent and assert the event id of this event with 
-    * passed event id 
-    */  
-  }
-
- /**
-   * Junit test case for updateEvent
-   */
-  @Test
-  public void testInsertEvent() {
-   /**
-    * @TODO: Call insertEvent
-    * Create event object by setting appropriate values
-    * Assert the status of insertEvent method
-    */  
-  }
-
- /**
-   * Junit test case for updateEvent
-   */
-  @Test
-  public void testUpdateEvent() {
-   /**
-    * @TODO: Fetch Event object by calling getAllEvents method 
-    * Update event object by setting appropriate values
-    * Call updateEvent method
-    * Assert the status of updateEvent method
-    */ 
-  }
-
- /**
-   * Junit test case for deleteEvent
-   */
-  @Test
-  public void testDeleteEvent() {
-   /**
-    * @TODO: Fetch Event object by calling getAllEvents method 
-    * Update event object by setting appropriate values
-    * Call deleteEvent method
-    * Assert the status of deleteEvent method
-    */ 
-  }
-
-}

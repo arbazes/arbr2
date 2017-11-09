@@ -59,6 +59,8 @@ import com.accenture.adf.businesstier.dao.EventDAO;
    /**
     * @TODO: Close connection object here  
     */
+   connection.close();
+   
   }
 
  /**
@@ -67,8 +69,7 @@ import com.accenture.adf.businesstier.dao.EventDAO;
    * @throws Exception
    */
   @Before
-
- public void setUp() throws Exception {
+  public void setUp() throws Exception {
    showAllEvents = new ArrayList<Object[]>();
    dao = new EventDAO();
   }
@@ -93,23 +94,23 @@ import com.accenture.adf.businesstier.dao.EventDAO;
    /**
     * @TODO: Call showAllEvents method and assert it for
     * size of returned type list
-    */ 
-  ArrayList<Object[]> eventList = new ArrayList<Object[]>();
+    */
+   ArrayList<Object[]> eventList = new ArrayList<Object[]>();
 
-  try {
-    eventList = dao.showAllEvents();
+   try {
+     eventList = dao.showAllEvents();
+     
+     
+     
+    } catch (ClassNotFoundException e) {
+     // TODO Auto-generated catch block
+     e.printStackTrace();
+    } catch (SQLException e) {
+     // TODO Auto-generated catch block
+     e.printStackTrace();
+    }
     
-    
-    
-   } catch (ClassNotFoundException e) {
-    // TODO Auto-generated catch block
-    e.printStackTrace();
-   } catch (SQLException e) {
-    // TODO Auto-generated catch block
-    e.printStackTrace();
-   }
-   
-   assertEquals(43, eventList.size()); 
+    assertEquals(8, eventList.size()); 
   }
   
   /**
@@ -123,25 +124,25 @@ import com.accenture.adf.businesstier.dao.EventDAO;
     * Call the updateEventDeletions for eventId
     * Again find out the seats available for this event
     * testSeatsAvailableBefore should be 1 more then testSeatsAvailableAfter
-    */
+    */ 
    String qry = "SELECT SEATSAVAILABLE FROM EVENTSESSION WHERE EVENTID=? AND EVENTSESSIONID=?;";
    try {
     connection = FERSDataConnection.createConnection();
     statement = connection.prepareStatement(qry);
-    statement.setInt(1, 10024);
-    statement.setInt(2, 10054);
+    statement.setInt(1, 1001);
+    statement.setInt(2, 10001);
     resultSet = statement.executeQuery();
     resultSet.next();
     
     int seats1 = resultSet.getInt(1);
     
     
-    dao.updateEventDeletions(10024, 10054);
+    dao.updateEventDeletions(1001, 10001);
     
     
     statement = connection.prepareStatement(qry);
-    statement.setInt(1, 10024);
-    statement.setInt(2, 10054);
+    statement.setInt(1, 1001);
+    statement.setInt(2, 10001);
     resultSet = statement.executeQuery();
     resultSet.next();
     
@@ -164,8 +165,6 @@ import com.accenture.adf.businesstier.dao.EventDAO;
     e.printStackTrace();
    }
    
-   
-   
   }
 
  /**
@@ -177,9 +176,9 @@ import com.accenture.adf.businesstier.dao.EventDAO;
     * @TODO: Call updateEventDeletions for incorrect eventid and it should
     * throw an exception
     */
-  boolean flag=false;
+   boolean flag=false;
    try {
-    dao.updateEventDeletions(024, 10054);
+    dao.updateEventDeletions(1001, 10001);
    } catch (ClassNotFoundException e) {
     flag = true;
    } catch (SQLException e) {
@@ -205,7 +204,7 @@ import com.accenture.adf.businesstier.dao.EventDAO;
     * Again find out the seats available for this event
     * testSeatsAvailableBefore should be 1 less then testSeatsAvailableAfter
     */ 
-  String qry = "SELECT SEATSAVAILABLE FROM EVENTSESSION WHERE EVENTID=? AND EVENTSESSIONID=?;";
+   String qry = "SELECT SEATSAVAILABLE FROM EVENTSESSION WHERE EVENTID=? AND EVENTSESSIONID=?;";
    try {
     connection = FERSDataConnection.createConnection();
     statement = connection.prepareStatement(qry);
@@ -243,8 +242,6 @@ import com.accenture.adf.businesstier.dao.EventDAO;
     // TODO Auto-generated catch block
     e.printStackTrace();
    }
-   
-   
   }
 
  /**
@@ -256,22 +253,21 @@ import com.accenture.adf.businesstier.dao.EventDAO;
     * @TODO: Call updateEventNominations for incorrect eventid and it should
     * throw an exception
     */ 
-  boolean flag=false;
-   try {
-    dao.updateEventDeletions(024, 10054);
-   } catch (ClassNotFoundException e) {
-    flag = true;
-   } catch (SQLException e) {
-    flag = true;
-
-  } catch (Exception e) {
-    flag = true;
-
-  }
     
-   assertEquals(true, flag);
-   
-  
+    boolean flag=false;
+     try {
+      dao.updateEventDeletions(024, 10054);
+     } catch (ClassNotFoundException e) {
+      flag = true;
+     } catch (SQLException e) {
+      flag = true;
+
+    } catch (Exception e) {
+      flag = true;
+
+    }
+      
+     assertEquals(true, flag);
   }
 
  /**
@@ -306,9 +302,10 @@ import com.accenture.adf.businesstier.dao.EventDAO;
     * @TODO: Call getEventCoordinator method
     * Assert the size of return type arraylist
     */  
-   EventDAO edao = new EventDAO();
-   
-   assertEquals(edao.getEventCoordinator().size(),5);
+    
+    EventDAO edao = new EventDAO();
+    
+    assertEquals(edao.getEventCoordinator().size(),5);
   }
   
   /**
@@ -332,7 +329,6 @@ import com.accenture.adf.businesstier.dao.EventDAO;
    e.printStackTrace();
   }
    assertEquals(10024, e1.getEventid());
-   
   } 
   
   /**
@@ -345,33 +341,32 @@ import com.accenture.adf.businesstier.dao.EventDAO;
     * Call insertEvent method by passing this event object
     * Assert the status of return type of this insertEvent method
     */  
-   Event e = new Event();
-   int status=0;
    
-   
-   e.setEventid(1050);
-   e.setDescription("des");
-   e.setDuration("0022");
-   e.setName("Event1");
-   e.setEventtype("Type");
-   e.setPlace("Place");
-   e.setEventCoordinatorId(101);
-   e.setSeatsavailable(1200);
-   e.setEventSession(5);
-   
-   
-   try {
-    status = dao.insertEvent(e);
-   } catch (ClassNotFoundException e1) {
-    // TODO Auto-generated catch block
-    e1.printStackTrace();
-   } catch (SQLException e1) {
-    // TODO Auto-generated catch block
-    e1.printStackTrace();
-   }
-   assertEquals(1, status);
-   
-   
+    Event e = new Event();
+    int status=0;
+    
+    
+    
+    e.setDescription("des");
+    e.setDuration("0022");
+    e.setName("Event1");
+    e.setEventtype("Type");
+    e.setPlace("Place");
+    e.setEventCoordinatorId(101);
+    e.setSeatsavailable(1200);
+    e.setEventSession(5);
+    
+    
+    try {
+     status = dao.insertEvent(e);
+    } catch (ClassNotFoundException e1) {
+     // TODO Auto-generated catch block
+     e1.printStackTrace();
+    } catch (SQLException e1) {
+     // TODO Auto-generated catch block
+     e1.printStackTrace();
+    }
+    assertEquals(1, status);
   }
   
   /**
@@ -386,7 +381,7 @@ import com.accenture.adf.businesstier.dao.EventDAO;
     * Update the values of event object
     * Call updateEvent method by passing this modified event as object
     * Assert the status of return type of updateEvent method
-    */   
+    */ 
    EventDAO edao =  new EventDAO();
    Event event =  new Event();
    event.setEventid(1006);
@@ -410,7 +405,7 @@ import com.accenture.adf.businesstier.dao.EventDAO;
     * @TODO: Fetch Event object by calling showAllEvents method   * 
     * Call deleteEvent method by passing this event id and event session id as object
     * Assert the status of return type of updateEvent method
-    */  
+    */ 
    try {
     ArrayList<Object[]> e = dao.showAllEvents("Rose Parade");
     
@@ -434,7 +429,6 @@ import com.accenture.adf.businesstier.dao.EventDAO;
     // TODO Auto-generated catch block
     e.printStackTrace();
    }
-   
-   
-  }}
+  }
 
+}
